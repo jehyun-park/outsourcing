@@ -2,7 +2,10 @@ package com.icomfortableworld.domain.feed.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,27 +73,37 @@ public class FeedServiceImpl implements FeedService {
 	//관리자 -> 전체조회, 일반 -> 팔로우한 사람만 조회
 	@Override
 	@Transactional(readOnly = true)
-	public List<FeedResponseDto> getAllFeeds(Long memberId, MemberRoleEnum memberRoleEnum) {
-		memberRepository.findByIdOrElseThrow(memberId);
-
-		List<FeedResponseDto> response = new ArrayList<>();
-
-		if(memberRoleEnum==MemberRoleEnum.ADMIN){
-			List<FeedModel> feedModels = feedRepository.findAll();
-
-			//여기부터 밑 함수
-			response.addAll(getAllFeedsIncludingTags(feedModels));
-		}else{
-			List<Follow> followList = followRepository.findByFromId(memberId);
-			for(Follow f : followList){
-				Long toId = f.getToId();
-				List<FeedModel> feedModels = feedRepository.findByMemberId(toId);
-				//이렇게 해도 됨? 위에 코드랑 중복쓰
-				response.addAll(getAllFeedsIncludingTags(feedModels));
-			}
+	public List<FeedResponseDto> getFeedList(String nickname) {
+		if (Objects.isNull(nickname)) {
+			return feedRepository.findAll().stream()
+					.map(board -> FeedResponseDto.builder()
+							.feedId(board.getFeedId())
+							.content(board.getContent())
+							.nickname(board.getNickname())
+							.build())
+					.collect(Collectors.toList());
+		} else {
+			return feedRepository.getFeedList(nickname).stream()
+					.map(feed -> FeedResponseDto.builder()
+							.feedId(feed.getFeedId())
+							.content(feed.getContent())
+							.build())
+					.collect(Collectors.toList());
 		}
+	}
 
-		return response;
+	@Override
+	public List<FeedResponseDto>  getFeedListWithPage(int page, int size) {
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		return feedRepository.getFeedListWithPage(pageRequest.getOffset(),pageRequest.getPageSize())
+				.stream()
+				.map(m->
+						FeedResponseDto.builder()
+								.feedId(m.getFeedId())
+								.content(m.getContent())
+								.build())
+				.collect(Collectors.toList());
 	}
 
 	@Override

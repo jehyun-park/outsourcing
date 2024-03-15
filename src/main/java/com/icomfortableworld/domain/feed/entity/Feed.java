@@ -56,4 +56,6 @@ public class Feed extends Timestamped {
 	public void update(String content) {
 		this.content = content;
 	}
+
+
 }

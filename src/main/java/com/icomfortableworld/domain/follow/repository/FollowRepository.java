@@ -19,4 +19,5 @@ public interface FollowRepository {
     List<Follow> findByFromId(Long memberId);
 
 
+    List<Follow> getFollowByToId(Long memberId);
 }

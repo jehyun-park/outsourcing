@@ -53,7 +53,8 @@ public class Member extends Timestamped {
 	@Enumerated(value = EnumType.STRING)
 	private MemberRoleEnum memberRoleEnum;
 
-	public static Member of(SignupRequestDto signupRequestDto, String password, MemberRoleEnum memberRoleEnum) {
+
+    public static Member of(SignupRequestDto signupRequestDto, String password, MemberRoleEnum memberRoleEnum) {
 		return Member.builder()
 			.username(signupRequestDto.getUsername())
 			.email(signupRequestDto.getEmail())

@@ -2,6 +2,7 @@ package com.icomfortableworld.domain.feed.controller;
 
 import java.util.List;
 
+import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -48,11 +49,16 @@ public class FeedController {
 	}
 
 	@GetMapping
-	public ResponseEntity<CommonResponseDto<List<FeedResponseDto>>> getAllFeeds(
-		@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-		List<FeedResponseDto> responseDto = feedService.getAllFeeds(memberDetails.getMember().getMemberId(),
-			memberDetails.getMember().getMemberRoleEnum());
-		return CommonResponseDto.of(HttpStatus.OK, "전체 피드 조회 성공", responseDto);
+	public List<FeedResponseDto> getBoardLists(
+			@Nullable @RequestParam(required = false) String username,
+			@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer size) {
+
+		if (username != null) {
+			return feedService.getFeedList(username);
+		} else {
+			return feedService.getFeedListWithPage(page, size);
+		}
 	}
 
 	@GetMapping("/{feedId}")

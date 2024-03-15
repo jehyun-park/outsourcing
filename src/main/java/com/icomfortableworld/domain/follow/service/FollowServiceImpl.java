@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.follow.service;
 
+import com.icomfortableworld.domain.follow.dto.response.FollowResponseDto;
 import com.icomfortableworld.domain.follow.entity.Follow;
 import com.icomfortableworld.domain.follow.repository.FollowRepository;
 import com.icomfortableworld.domain.member.model.MemberModel;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +45,15 @@ public class FollowServiceImpl implements FollowService {
             throw new IllegalArgumentException("자신의 팔로우만 취소할 수 있습니다.");
         }
         followRepository.delete(follow);
+    }
+
+    @Override
+    public List<FollowResponseDto> getFollowers(Long memberId) {
+        List<Follow> followers = followRepository.getFollowByToId(memberId);
+        return followers.stream()
+                .map(follow -> FollowResponseDto.builder()
+                        .followerId(follow.getFromId())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -89,4 +89,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 			throw new CustomMemberException(MemberErrorCode.MEMBER_ERROR_CODE_PASSWORD_RECENTLY_USED);
 		}
 	}
+
+
 }

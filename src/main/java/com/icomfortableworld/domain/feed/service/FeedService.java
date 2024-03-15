@@ -12,7 +12,9 @@ public interface FeedService {
 
 	FeedResponseDto updateFeed(Long feedId, FeedRequestDto requestDto, Long memberId, MemberRoleEnum memberRole);
 
-	List<FeedResponseDto> getAllFeeds(Long memberId, MemberRoleEnum memberRoleEnum);
+	List<FeedResponseDto> getFeedList(String nickname);
+
+	List<FeedResponseDto>  getFeedListWithPage(int page, int size);
 
 	CommentFeedResponseDto getFeed(Long feedId,Long memberId);
 

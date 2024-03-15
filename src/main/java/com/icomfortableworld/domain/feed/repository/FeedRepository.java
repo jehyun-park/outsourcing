@@ -1,5 +1,6 @@
 package com.icomfortableworld.domain.feed.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +25,9 @@ public interface FeedRepository {
 	void deleteById(Long feedId, Long memberId, MemberRoleEnum authority);
 
 	List<FeedModel> findByMemberId(Long toId);
+
+	List<Feed> getFeedList(String nickname);
+
+	List<Feed> getFeedListWithPage(long offset, int pageSize);
 
 }

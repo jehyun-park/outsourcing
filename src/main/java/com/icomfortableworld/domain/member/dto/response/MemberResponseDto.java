@@ -26,4 +26,5 @@ public class MemberResponseDto {
 			.memberRoleEnum(memberModel.getMemberRoleEnum())
 			.build();
 	}
+
 }

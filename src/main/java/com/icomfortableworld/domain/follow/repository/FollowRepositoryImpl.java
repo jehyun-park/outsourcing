@@ -1,16 +1,20 @@
 package com.icomfortableworld.domain.follow.repository;
 
 import com.icomfortableworld.domain.follow.entity.Follow;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.icomfortableworld.domain.follow.entity.QFollow.follow;
+
 @RequiredArgsConstructor
 @Repository
 public class FollowRepositoryImpl implements FollowRepository {
     private final FollowJpaRepository followJpaRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public Optional<Follow> findByFollowIdAndFromId(Long followId, Long fromId) {
@@ -36,5 +40,13 @@ public class FollowRepositoryImpl implements FollowRepository {
     public List<Follow> findByFromId(Long memberId) {
         return followJpaRepository.findByFromId(memberId);
     }
+
+    @Override
+    public List<Follow> getFollowByToId(Long memberId) {
+        return jpaQueryFactory.selectFrom(follow)
+                .where(follow.toId.eq(memberId))
+                .fetch();
+    }
+
 
 }
